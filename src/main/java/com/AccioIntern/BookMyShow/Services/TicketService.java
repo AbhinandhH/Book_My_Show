@@ -1,6 +1,7 @@
 package com.AccioIntern.BookMyShow.Services;
 
 import com.AccioIntern.BookMyShow.Convertors.TicketConvertors;
+import com.AccioIntern.BookMyShow.DTOs.RequestDTOs.TicketDTOs.CancelTicketDTO;
 import com.AccioIntern.BookMyShow.DTOs.RequestDTOs.TicketDTOs.TicketBookingDTO;
 import com.AccioIntern.BookMyShow.Models.Show;
 import com.AccioIntern.BookMyShow.Models.ShowSeat;
@@ -60,7 +61,6 @@ public class TicketService {
                 if(seat.isBooked()){
                     throw new Exception("The required seats are not available");
                 }
-                System.out.print(seat.getSeatNo() + " ");
                 seatsTryingToBook.add(seat);
             }
         }
@@ -89,6 +89,65 @@ public class TicketService {
         showRepository.save(show);
 
         return "The ticket has been booked successfully";
+    }
+
+
+    public String cancelTicket(CancelTicketDTO cancelTicketDTO) throws Exception{
+        User user;
+        try{
+            user  = userRepository.findById(cancelTicketDTO.getUserId()).get();
+        }catch (Exception e){
+            throw new Exception("User not found");
+        }
+
+        Show show;
+        try{
+            show  = showRepository.findById(cancelTicketDTO.getShowId()).get();
+        }catch (Exception e){
+            throw new Exception("Show not found");
+        }
+
+        List<Ticket> tickets = user.getTickets();
+        if(tickets.size() == 0){
+            throw new Exception("This user hasn't booked tickets");
+        }
+
+        Ticket ticket = null;
+
+        for(Ticket ticketOneByOne : tickets){
+            if(ticketOneByOne.getShows().equals(show)){
+                ticket = ticketOneByOne;
+                break;
+            }
+        }
+
+        if(ticket.equals(null)){
+            throw new Exception("This ticket doesn't belongs to the user");
+        }
+
+        List<String> seatsBooked = List.of(ticket.getBookedSeats().split(","));
+
+        List<ShowSeat> totalSeatsInThisShow = show.getSeats();
+
+        for(String seatNo : seatsBooked){
+            for(ShowSeat showSeat : totalSeatsInThisShow){
+                if(showSeat.getSeatNo().equals(seatNo)){
+                    showSeat.setBooked(false);
+                }
+            }
+        }
+
+        ticketRepository.delete(ticket);
+
+        show.getTickets().remove(ticket);
+
+        showRepository.save(show);
+
+        user.getTickets().remove(ticket);
+
+        userRepository.save(user);
+
+        return "Ticket canceled successfully";
     }
 
 

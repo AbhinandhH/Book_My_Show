@@ -78,7 +78,29 @@ public class ShowService {
         return showSeats;
     }
 
+    public String cancelShow(Integer showId) throws Exception{
+        Show show;
+        try{
+            show = showRepository.findById(showId).get();
+        }catch (Exception e){
+            throw new Exception("Show is not found");
+        }
 
+        Theatre theatre = show.getTheatre();
 
+        theatre.getShows().remove(show);
+
+        Movie movie = show.getMovie();
+
+        movie.getShows().remove(show);
+
+        showRepository.delete(show);
+
+        movieRepository.save(movie);
+
+        theatreRepository.save(theatre);
+
+        return "Show has canceled";
+    }
 
 }
