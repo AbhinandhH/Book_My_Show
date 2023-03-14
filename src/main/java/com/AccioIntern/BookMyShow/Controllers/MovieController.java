@@ -23,7 +23,7 @@ public class MovieController {
         }
     }
 
-    @GetMapping("/get_movie_having_maximum_shows")
+    @GetMapping("/get-movie-having-maximum-shows")
     public ResponseEntity<String> getMovieWithMaximumNoOfShows(){
         try{
             return new ResponseEntity<>(movieService.getMovieWithMaximumNoOfShows(),HttpStatus.FOUND);

@@ -16,14 +16,4 @@ public class MovieConvertors {
         return movie;
     }
 
-    public static MovieResponseDTO movieToMovieResponseDTO(Movie movie){
-        MovieResponseDTO movieResponseDTO = MovieResponseDTO.builder()
-                .movieLanguage(movie.getMovieLanguage())
-                .movieGenre(movie.getMovieGenre())
-                .name(movie.getName())
-                .duration(movie.getDuration())
-                .rating(movie.getRating())
-                .build();
-        return movieResponseDTO;
-    }
 }

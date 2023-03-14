@@ -31,11 +31,14 @@ public class MovieService {
         int max = 0;
         Movie maximumShowMovie = null;
         for(Movie movie : movieList){
-            if(movie.getShows().size() > max){
-                max = movie.getShows().size();
+            int totalNumberOfShowsOfThisMovie = movie.getShows().size();
+            if(totalNumberOfShowsOfThisMovie > max){
+                max = totalNumberOfShowsOfThisMovie;
                 maximumShowMovie = movie;
             }
         }
-        return MovieConvertors.movieToMovieResponseDTO(maximumShowMovie).toString();
+
+        return maximumShowMovie.getName();
     }
+
 }
