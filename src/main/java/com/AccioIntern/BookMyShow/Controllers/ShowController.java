@@ -2,6 +2,7 @@ package com.AccioIntern.BookMyShow.Controllers;
 
 import com.AccioIntern.BookMyShow.DTOs.RequestDTOs.ShowDTOs.ShowCreationDTO;
 import com.AccioIntern.BookMyShow.Services.ShowService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ public class ShowController {
     @Autowired
     ShowService showService;
     @PostMapping("/add")
-    public ResponseEntity<String> createShow(@RequestBody ShowCreationDTO showCreationDTO){
+    public ResponseEntity<String> createShow(@RequestBody @Valid ShowCreationDTO showCreationDTO){
         try{
             return new ResponseEntity<>(showService.createShow(showCreationDTO), HttpStatus.CREATED);
         }catch(Exception e){

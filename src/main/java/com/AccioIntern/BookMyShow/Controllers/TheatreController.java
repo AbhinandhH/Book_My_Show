@@ -3,6 +3,7 @@ package com.AccioIntern.BookMyShow.Controllers;
 import com.AccioIntern.BookMyShow.DTOs.RequestDTOs.TheatreDTOs.TheatreCreationDTO;
 import com.AccioIntern.BookMyShow.Models.Theatre;
 import com.AccioIntern.BookMyShow.Services.TheatreService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class TheatreController {
     @Autowired
     TheatreService theatreService;
     @PostMapping("/add")
-    public ResponseEntity<String> createTheatre(@RequestBody TheatreCreationDTO theatreCreationDTO){
+    public ResponseEntity<String> createTheatre(@RequestBody @Valid TheatreCreationDTO theatreCreationDTO){
         try{
             return new ResponseEntity<>(theatreService.createTheatre(theatreCreationDTO), HttpStatus.CREATED);
         }catch (Exception e){

@@ -3,6 +3,7 @@ package com.AccioIntern.BookMyShow.Controllers;
 import com.AccioIntern.BookMyShow.DTOs.RequestDTOs.TicketDTOs.CancelTicketDTO;
 import com.AccioIntern.BookMyShow.DTOs.RequestDTOs.TicketDTOs.TicketBookingDTO;
 import com.AccioIntern.BookMyShow.Services.TicketService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ public class TicketController {
     @Autowired
     TicketService ticketService;
     @PostMapping("/book-ticket")
-    public ResponseEntity<String> bookTicket(@RequestBody TicketBookingDTO ticketBookingDTO){
+    public ResponseEntity<String> bookTicket(@RequestBody @Valid TicketBookingDTO ticketBookingDTO){
         try{
             return new ResponseEntity<>(ticketService.bookTicket(ticketBookingDTO),HttpStatus.CREATED);
         }catch (NoSuchFieldException e){
@@ -25,7 +26,7 @@ public class TicketController {
     }
 
     @DeleteMapping("/cancel-ticket")
-    public ResponseEntity<String> cancelTicket(@RequestBody CancelTicketDTO cancelTicketDTO){
+    public ResponseEntity<String> cancelTicket(@RequestBody @Valid CancelTicketDTO cancelTicketDTO){
         try{
             return new ResponseEntity<>(ticketService.cancelTicket(cancelTicketDTO), HttpStatus.GONE);
         }catch (Exception e){

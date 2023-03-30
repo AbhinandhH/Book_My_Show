@@ -4,6 +4,7 @@ import com.AccioIntern.BookMyShow.DTOs.RequestDTOs.MovieDTOs.MovieCreationDTO;
 import com.AccioIntern.BookMyShow.DTOs.ResponseDTOs.MovieDTOs.MovieResponseDTO;
 import com.AccioIntern.BookMyShow.Models.Movie;
 import com.AccioIntern.BookMyShow.Services.MovieService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class MovieController {
     @Autowired
     MovieService movieService;
     @PostMapping("/add")
-    public ResponseEntity<String> createMovie(@RequestBody MovieCreationDTO movieCreationDTO){
+    public ResponseEntity<String> createMovie(@RequestBody @Valid MovieCreationDTO movieCreationDTO){
         try{
             return new ResponseEntity<>(movieService.createMovie(movieCreationDTO), HttpStatus.CREATED);
         }catch (NullPointerException e){

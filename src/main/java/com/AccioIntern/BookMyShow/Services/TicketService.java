@@ -8,7 +8,11 @@ import com.AccioIntern.BookMyShow.Models.ShowSeat;
 import com.AccioIntern.BookMyShow.Models.Ticket;
 import com.AccioIntern.BookMyShow.Models.User;
 import com.AccioIntern.BookMyShow.Repositories.*;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,6 +34,8 @@ public class TicketService {
     ShowSeatRepository showSeatRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    JavaMailSender javaMailSender;
 
     public String bookTicket(TicketBookingDTO ticketBookingDTO) throws Exception{
         Show show;
@@ -87,6 +93,12 @@ public class TicketService {
         show.getTickets().add(ticket);
 
         showRepository.save(show);
+
+        String email = user.getEmail();
+
+        sendMail(email, show, bookedSeats);
+
+
 
         return "The ticket has been booked successfully";
     }
@@ -148,6 +160,29 @@ public class TicketService {
         userRepository.save(user);
 
         return "Ticket canceled successfully";
+    }
+
+    private void sendMail(String email, Show show, String bookedSeats) throws MessagingException {
+
+        String filmName = show.getMovie().getName();
+
+        String mailText = "Hi This is to confirm your ticket booking for film '" + filmName + "'\n"
+                           + "Booked seats : " + bookedSeats + "\n"
+                           + "Thank you. Visit again !!!";
+
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+        mimeMessageHelper.setFrom("abhinandhabhi53@gmail.com");
+
+        mimeMessageHelper.setTo(email);
+
+        mimeMessageHelper.setText(mailText);
+
+        mimeMessageHelper.setSubject("Confirming your booked ticket");
+
+        javaMailSender.send(mimeMessage);
     }
 
 
